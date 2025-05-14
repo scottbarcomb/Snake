@@ -1,3 +1,3 @@
 # Snake
 
-## Yeah it's just Snake
+Yeah it's just Snake
