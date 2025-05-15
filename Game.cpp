@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Game::Game() : window(nullptr), renderer(nullptr), isRunning(false) {}
+Game::Game() : window(nullptr), renderer(nullptr), isRunning(false), snake(nullptr) {}
 
 Game::~Game() {}
 
@@ -18,6 +18,9 @@ bool Game::init(const char* title, int width, int height) {
 		return false;
 	}
 
+	snake = new Snake();
+	snake->init();
+
 	isRunning = true;
 	return true;
 }
@@ -27,7 +30,7 @@ void Game::run() {
 		handleEvents(); // handle any events triggered between frames
 		update(); // update the game state (snake, apples, points, etc.)
 		render(); // render the next frame
-		SDL_Delay(100); // basic frame control (10 FPS)
+		SDL_Delay(20); // basic frame control (50 FPS)
 	}
 }
 
@@ -41,13 +44,27 @@ void Game::handleEvents() {
 			if (event.key.key == SDLK_ESCAPE) {
 				isRunning = false;
 			}
-			// snake direction controls are gonna go here
+			// snake direction controls
+			direction = snake->getDirection();
+			if ((event.key.scancode == SDL_SCANCODE_W || event.key.key == SDLK_UP) && direction->y != 1) {
+				snake->setDirection(0, -1);
+			}
+			if ((event.key.scancode == SDL_SCANCODE_S || event.key.key == SDLK_DOWN) && direction->y != -1) {
+				snake->setDirection(0, 1);
+			}
+			if ((event.key.scancode == SDL_SCANCODE_A || event.key.key == SDLK_LEFT) && direction->x != 1) {
+				snake->setDirection(-1, 0);
+			}
+			if ((event.key.scancode == SDL_SCANCODE_D || event.key.key == SDLK_RIGHT) && direction->x != -1) {
+				snake->setDirection(1, 0);
+			}
 		}
 	}
 }
 
 void Game::update() {
 	// calls to update the snake and food are gonna go here
+	snake->move();
 }
 
 void Game::render() {
@@ -55,6 +72,7 @@ void Game::render() {
 	SDL_RenderClear(renderer);
 
 	// snake and food will be drawn here
+	snake->drawSnake(renderer);
 
 	SDL_RenderPresent(renderer);
 }

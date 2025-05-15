@@ -1,4 +1,5 @@
 #pragma once
+#include "Snake.h"
 #include <SDL3/SDL.h>
 
 class Game
@@ -19,4 +20,6 @@ private:
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+	Snake* snake;
+	SDL_Point* direction;
 };
