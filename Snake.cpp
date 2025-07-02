@@ -18,11 +18,8 @@ void Snake::init() {
 
 	velocity = 4;
 	numSubgridMoves = snek.h / velocity;
-}
 
-void Snake::drawSnake(SDL_Renderer* renderer) {
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	SDL_RenderFillRect(renderer, &snek);
+	length = 1;
 }
 
 void Snake::move() {
@@ -49,4 +46,8 @@ SDL_FRect* Snake::getPosition() {
 
 int Snake::getNumSubgridMoves() {
 	return numSubgridMoves;
+}
+
+int Snake::getLength() {
+	return length;
 }

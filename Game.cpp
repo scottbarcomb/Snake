@@ -20,6 +20,7 @@ bool Game::init(const char* title, int width, int height) {
 
 	snake = new Snake();
 	snake->init();
+	
 
 	LEFTBORDER = 0;
 	RIGHTBORDER = width - snake->getPosition()->w;
@@ -81,9 +82,16 @@ void Game::render() {
 	SDL_RenderClear(renderer);
 
 	// snake and food will be drawn here
-	snake->drawSnake(renderer);
+	drawSnake();
 
 	SDL_RenderPresent(renderer);
+}
+
+void Game::drawSnake() {
+	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+	for (int i = 0; i < snake->getLength(); i++) {
+		SDL_RenderFillRect(renderer, snake->getPosition());
+	}
 }
 
 void Game::moveSnake() {

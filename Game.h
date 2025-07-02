@@ -1,6 +1,7 @@
 #pragma once
 #include "Snake.h"
 #include <SDL3/SDL.h>
+#include <vector>
 
 class Game
 {
@@ -17,6 +18,7 @@ private:
 	void update();
 	void render();
 
+	void drawSnake();
 	void moveSnake();
 	void checkSnakeCollision();
 
@@ -26,6 +28,7 @@ private:
 	Snake* snake;
 	SDL_Point* snakeDir;
 	SDL_FRect* snakePos;
+	vector<SDL_FRect*> snakeSegments;
 
 	int LEFTBORDER;
 	int RIGHTBORDER;
