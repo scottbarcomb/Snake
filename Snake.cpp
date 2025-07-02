@@ -17,6 +17,7 @@ void Snake::init() {
 	direction.y = 1; // move down
 
 	velocity = 4;
+	numSubgridMoves = snek.h / velocity;
 }
 
 void Snake::drawSnake(SDL_Renderer* renderer) {
@@ -29,6 +30,10 @@ void Snake::move() {
 	snek.y += direction.y * velocity;
 }
 
+void Snake::setVelocity(int vel) {
+	velocity = 0;
+}
+
 void Snake::setDirection(int horiz, int vert) {
 	direction.x = horiz;
 	direction.y = vert;
@@ -36,4 +41,12 @@ void Snake::setDirection(int horiz, int vert) {
 
 SDL_Point* Snake::getDirection() {
 	return &direction;
+}
+
+SDL_FRect* Snake::getPosition() {
+	return &snek;
+}
+
+int Snake::getNumSubgridMoves() {
+	return numSubgridMoves;
 }

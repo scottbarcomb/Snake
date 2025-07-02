@@ -21,6 +21,11 @@ bool Game::init(const char* title, int width, int height) {
 	snake = new Snake();
 	snake->init();
 
+	LEFTBORDER = 0;
+	RIGHTBORDER = width - snake->getPosition()->w;
+	TOPBORDER = 0;
+	BOTTOMBORDER = height - snake->getPosition()->h;
+
 	isRunning = true;
 	return true;
 }
@@ -45,17 +50,17 @@ void Game::handleEvents() {
 				isRunning = false;
 			}
 			// snake direction controls
-			direction = snake->getDirection();
-			if ((event.key.scancode == SDL_SCANCODE_W || event.key.key == SDLK_UP) && direction->y != 1) {
+			snakeDir = snake->getDirection();
+			if ((event.key.scancode == SDL_SCANCODE_W || event.key.key == SDLK_UP) && snakeDir->y != 1) {
 				snake->setDirection(0, -1);
 			}
-			if ((event.key.scancode == SDL_SCANCODE_S || event.key.key == SDLK_DOWN) && direction->y != -1) {
+			if ((event.key.scancode == SDL_SCANCODE_S || event.key.key == SDLK_DOWN) && snakeDir->y != -1) {
 				snake->setDirection(0, 1);
 			}
-			if ((event.key.scancode == SDL_SCANCODE_A || event.key.key == SDLK_LEFT) && direction->x != 1) {
+			if ((event.key.scancode == SDL_SCANCODE_A || event.key.key == SDLK_LEFT) && snakeDir->x != 1) {
 				snake->setDirection(-1, 0);
 			}
-			if ((event.key.scancode == SDL_SCANCODE_D || event.key.key == SDLK_RIGHT) && direction->x != -1) {
+			if ((event.key.scancode == SDL_SCANCODE_D || event.key.key == SDLK_RIGHT) && snakeDir->x != -1) {
 				snake->setDirection(1, 0);
 			}
 		}
@@ -63,8 +68,12 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-	// calls to update the snake and food are gonna go here
-	snake->move();
+	// Wall collision check
+	checkSnakeCollision();
+
+	// Move the snake
+	moveSnake();
+
 }
 
 void Game::render() {
@@ -75,6 +84,38 @@ void Game::render() {
 	snake->drawSnake(renderer);
 
 	SDL_RenderPresent(renderer);
+}
+
+void Game::moveSnake() {
+	// Move the snake and re-render by number of Subgrid moves
+	// Say the grid size is 20px, and the snake's velocity is 4,
+	// then the snake will move for 5 frames before any other
+	// game updates occur.
+	for (int i = 1; i < snake->getNumSubgridMoves(); i++) {
+		snake->move();
+		render();
+		SDL_Delay(20);
+	}
+	snake->move();
+}
+
+void Game::checkSnakeCollision() {
+	snakePos = snake->getPosition();
+	snakeDir = snake->getDirection();
+
+	// Check wall collisions
+	if (snakePos->x == LEFTBORDER && snakeDir->x == -1) {
+		snake->setVelocity(0);
+	}
+	else if (snakePos->x == RIGHTBORDER && snakeDir->x == 1) {
+		snake->setVelocity(0);
+	}
+	else if (snakePos->y == TOPBORDER && snakeDir->y == -1) {
+		snake->setVelocity(0);
+	}
+	else if (snakePos->y == BOTTOMBORDER && snakeDir->y == 1) {
+		snake->setVelocity(0);
+	}
 }
 
 void Game::cleanup() {

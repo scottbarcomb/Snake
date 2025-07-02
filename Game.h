@@ -17,9 +17,18 @@ private:
 	void update();
 	void render();
 
+	void moveSnake();
+	void checkSnakeCollision();
+
 	bool isRunning;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	Snake* snake;
-	SDL_Point* direction;
+	SDL_Point* snakeDir;
+	SDL_FRect* snakePos;
+
+	int LEFTBORDER;
+	int RIGHTBORDER;
+	int TOPBORDER;
+	int BOTTOMBORDER;
 };
